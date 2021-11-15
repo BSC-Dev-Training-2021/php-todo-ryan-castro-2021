@@ -40,22 +40,15 @@
                     <h2>
                         <?php
                         include 'class.php';
-                        $selectdata = new Select;
-                        $where = "WHERE Status = 'Completed'";
-                        $numberlist = $selectdata->select('List','todolist', $where ,'',''); 
+                        session_start();
+                        $_SESSION['$compare'] = "complete";
+                        $data = new Database;
 
-                        $getpag = $selectdata->select('*','pagination','WHERE ID=1','',''); 
-                        $offset = 0;
-                        foreach($getpag as $pag){
-                            $limit = $pag["Pagination"];
-                        }    
-                            if (!empty($_GET['id'])){
-                                $offset = $pag["Pagination"] * $_GET['id'];   
-                        }  
+                        $data->showlist();
 
                         ?>
                         Completed Tasks
-                        <span class="badge badge-pill badge-info"><?php echo count($numberlist); ?></span>
+                        <span class="badge badge-pill badge-info"><?php echo count($_SESSION['$numberlist']); ?></span>
                     </h2>
                 </header>
                 <div class="col-lg-12 mt-5">
@@ -63,13 +56,13 @@
                     <section>
                         <ul class="list-group list-group-flush">
                             <?php
-                            $orderby = "ORDER BY Date DESC";
-                            $post_table = $selectdata->select('*','todolist ',' '. $where .' ',' '.$orderby.' ' , ' LIMIT '.$limit.' OFFSET '.$offset);   
-                            foreach($post_table as $list){  
+                              
+                            foreach($_SESSION['$post_table'] as $list){  
                             ?>
                             <li class="list-group-item"><?php echo $list['List']; ?></li>
                             <?php
                             }
+                            session_destroy();
                             ?>
                         </ul>
                     </section>

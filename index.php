@@ -1,10 +1,11 @@
 <?php
 include 'class.php';
-$selectdata = new Select;
-$insertdata = new Insert;
+$data = new Database;
+session_start();
+$_SESSION['$compare'] = "todo";
 
 if(isset($_POST["createtodo"]))  { 
-	$insertdata->inserttodo();
+	$data->inserttodo();
 }
 
 ?>
@@ -65,29 +66,20 @@ if(isset($_POST["createtodo"]))  {
                     <section>
                         <ul class="list-group list-group-flush">
                             <?php 
-                            if (!empty($_GET['id'])){
-                                $getid = (int)$_GET['id'];
-                            }
-                            $getpag = $selectdata->select('*','pagination','WHERE ID=1','',''); 
-                            $limit = 0;
-                            $offset = 0;
-                            foreach($getpag as $pag){
-                                $limit = $pag["Pagination"];
-                                if (!empty($_GET['id'])){
-                                    $offset = $pag["Pagination"] * $_GET['id'];
-                                }    
-                            }  
-                            $orderby = "ORDER BY Date DESC";
-                            $where = "WHERE Status = 'To Do'";
-                            $post_table = $selectdata->select('*','todolist ',' '. $where .' ',' '.$orderby.' ',' LIMIT '.$limit.' OFFSET '.$offset);    
-                            foreach($post_table as $post){                                                                                    
+                            
+                            $data->showlist();
+                           
+                            foreach($_SESSION['$post_table'] as $post){                                                                                    
                             ?>    
                             <li class="list-group-item">
                                 <?php echo $post["List"]; ?>
                                 <a onclick="return confirm('Are you sure you want to delete this item?');"  href="controller.php?ID=<?php echo $post["ID"];?>"><button type="button" class="btn btn-light fa fa-trash-o float-right ml-1"></button></a>
                                 <a onclick="return confirm('To Do Complete?');"  href="controller.php?completed=<?php echo $post["ID"];?>"><button type="button" class="btn btn-light fa fa-check float-right"></button></a>                      
                             </li>
-                            <?php }?>
+                            <?php 
+                            }
+                            session_destroy();
+                            ?>
                         </ul>
                     </section>
                     <nav aria-label="Page navigation example">
