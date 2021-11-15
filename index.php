@@ -8,6 +8,13 @@ if(isset($_POST["createtodo"]))  {
 	$data->inserttodo();
 }
 
+if (isset($_POST['detele_btn_confirm'])){
+    
+    $newid = $_POST['todo_id_txt'];
+
+    header("location:controller.php?completed=$newid");  
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -73,32 +80,59 @@ if(isset($_POST["createtodo"]))  {
                             ?>    
                             <li class="list-group-item">
                                 <?php echo $post["List"]; ?>
-                                <a onclick="return confirm('Are you sure you want to delete this item?');"  href="controller.php?ID=<?php echo $post["ID"];?>"><button type="button" class="btn btn-light fa fa-trash-o float-right ml-1"></button></a>
-                                <a onclick="return confirm('To Do Complete?');"  href="controller.php?completed=<?php echo $post["ID"];?>"><button type="button" class="btn btn-light fa fa-check float-right"></button></a>                      
+                                <!--<a onclick="return confirm('Are you sure you want to delete this item?');"  href="controller.php?ID=<?php echo $post["ID"];?>">--> 
+                                <button type="button" id="deletebtn" todo_id="<?php echo $post["ID"];?>" class="btn btn-light fa fa-trash-o float-right ml-1" data-toggle="modal" data-target="#deleteConfirmModal"></button>
+                                <!--</a>  -->    
+                                <!--<a onclick="return confirm('To Do Complete?');"  href="controller.php?completed="> --> 
+                                <button type="button"  class="btn btn-light fa fa-check float-right" data-toggle="modal" data-target="#deleteConfirmModal"></button>
+                                             
                             </li>
                             <?php 
                             }
-                            session_destroy();
+                           
                             ?>
                         </ul>
                     </section>
                     <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link">Previous</a>
+                    <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <a class="page-link" href="index.php?
+                            <?php 
+                            if (!empty($_SESSION['$getidpage'])) {
+                                echo "id="; 
+                                echo $_SESSION['$getidpage']-1;
+                            }
+                            ?>
+                            ">Previous</a>
                             </li>
                             <li class="page-item"><a class="page-link" href="index.php?id=0">1</a></li>
                             <li class="page-item"><a class="page-link" href="index.php?id=1">2</a></li>
                             <li class="page-item"><a class="page-link" href="index.php?id=2">3</a></li>
                             <li class="page-item">
-                                <a class="page-link" href="index.php?id=">Next</a>
+                           
+                            <a class="page-link"  href="index.php?
+                            <?php 
+                            if (empty($_SESSION['$getidpage'])){
+                                $_SESSION['$getidpage']=0;
+                            }
+                            if (!empty($_SESSION['$getidpage']) or $_SESSION['$getidpage']==0) {
+                                echo "id="; 
+                                echo $_SESSION['$getidpage']+1;
+                            }
+                            ?>
+                            ">Next</a>
                             </li>
+
+                            <?php
+                            session_destroy();
+                            ?>
                         </ul>
                     </nav>
                 </div>
             </div>
             <section>
                 <div class="modal" id="deleteConfirmModal" tabindex="-1" data-backdrop="static">
+                    <form method="POST" action="">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -111,11 +145,13 @@ if(isset($_POST["createtodo"]))  {
                                 <p>Are you sure you want to delete this task?</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary">Delete</button>
+                                <input type="text" name="todo_id_txt" id="todo_id_txt" hidden>
+                                 <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                <button type="submit" name="detele_btn_confirm" class="btn btn-primary">Delete</button>
                             </div>
                         </div>
                     </div>
+                        </form>
                 </div>
             </section>
         </div>

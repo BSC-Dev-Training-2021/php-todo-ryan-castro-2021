@@ -41,6 +41,7 @@
                         <?php
                         include 'class.php';
                         session_start();
+
                         $_SESSION['$compare'] = "complete";
                         $data = new Database;
 
@@ -62,21 +63,43 @@
                             <li class="list-group-item"><?php echo $list['List']; ?></li>
                             <?php
                             }
-                            session_destroy();
+                            
                             ?>
                         </ul>
                     </section>
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link">Previous</a>
+                            <li class="page-item">
+                                <a class="page-link" href="completed.php?
+                            <?php 
+                            if (!empty($_SESSION['$getidpage'])) {
+                                echo "id="; 
+                                echo $_SESSION['$getidpage']-1;
+                            }
+                            ?>
+                            ">Previous</a>
                             </li>
                             <li class="page-item"><a class="page-link" href="completed.php?id=0">1</a></li>
                             <li class="page-item"><a class="page-link" href="completed.php?id=1">2</a></li>
                             <li class="page-item"><a class="page-link" href="completed.php?id=2">3</a></li>
                             <li class="page-item">
-                                <a class="page-link" href="#">Next</a>
+                           
+                            <a class="page-link"  href="completed.php?
+                            <?php 
+                            if (empty($_SESSION['$getidpage'])){
+                                $_SESSION['$getidpage']=0;
+                            }
+                            if (!empty($_SESSION['$getidpage']) or $_SESSION['$getidpage']==0) {
+                                echo "id="; 
+                                echo $_SESSION['$getidpage']+1;
+                            }
+                            ?>
+                            ">Next</a>
                             </li>
+
+                            <?php
+                            session_destroy();
+                            ?>
                         </ul>
                     </nav>
                 </div>

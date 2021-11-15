@@ -143,6 +143,7 @@ class Database {
         foreach($getpag as $pag){
             $limit = $pag["Pagination"];
             if (!empty($_GET['id'])){
+                $_SESSION['$getidpage'] = $_GET['id'];
                 $offset = $pag["Pagination"] * $_GET['id'];
             }    
         }  
